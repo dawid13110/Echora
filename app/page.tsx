@@ -29,6 +29,14 @@ export default function HomePage() {
             <a href="#safety" className="hover:text-zinc-100 transition">
               Safety
             </a>
+
+            {/* Account link for users */}
+            <Link
+              href="/account"
+              className="hover:text-zinc-100 transition"
+            >
+              Account
+            </Link>
           </nav>
 
           <div className="flex items-center gap-3">
@@ -65,8 +73,8 @@ export default function HomePage() {
 
           <p className="max-w-xl text-sm leading-relaxed text-zinc-300 sm:text-base">
             ECHORA lets you create an AI “echo” of yourself. Teach it your tone,
-            boundaries, and stories — then let it handle DMs, support, and
-            conversations while you focus on your real life.
+            boundaries, and stories — then let it handle conversations while you
+            focus on your real life.
           </p>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -77,10 +85,8 @@ export default function HomePage() {
               Start for free
             </Link>
             <p className="text-xs text-zinc-400">
-              No credit card needed to test.{" "}
-              <span className="block sm:inline">
-                Bring your own OpenAI key when you’re ready.
-              </span>
+              No credit card needed.  
+              <span className="block sm:inline">Bring your own OpenAI key when you’re ready.</span>
             </p>
           </div>
 
@@ -98,7 +104,7 @@ export default function HomePage() {
                 Built on top-tier models
               </p>
               <p className="text-[11px] text-zinc-400">
-                Uses OpenAI models with your own API key and limits.
+                Works using your own OpenAI key and limits.
               </p>
             </div>
             <div className="rounded-xl border border-zinc-800 bg-zinc-950/60 p-3">
@@ -106,7 +112,7 @@ export default function HomePage() {
                 You stay in control
               </p>
               <p className="text-[11px] text-zinc-400">
-                Clear safety rules so Echo never crosses your line.
+                Clear safety rules ensure Echo never crosses your line.
               </p>
             </div>
           </div>
@@ -132,8 +138,7 @@ export default function HomePage() {
               </div>
               <div className="flex">
                 <div className="max-w-[80%] rounded-2xl rounded-bl-sm bg-zinc-800 px-3 py-2 text-[11px] text-zinc-100">
-                  Got it. I’ll keep it real, respectful, and aligned with your
-                  values. Nothing fake, nothing sugar-coated.
+                  Got it. I&apos;ll stay respectful, real, and aligned with your values.
                 </div>
               </div>
             </div>
@@ -160,7 +165,7 @@ export default function HomePage() {
                 1 · Train your Echo
               </p>
               <p className="text-xs text-zinc-400">
-                Set your tones, base prompt, and safety rules in a guided flow.
+                Set your tones, base prompt, and safety rules.
               </p>
             </div>
             <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-4">
@@ -168,7 +173,7 @@ export default function HomePage() {
                 2 · Talk to it
               </p>
               <p className="text-xs text-zinc-400">
-                Use the Echo Chat to refine responses until it feels “like you”.
+                Refine the way it responds until it feels like you.
               </p>
             </div>
             <div className="rounded-2xl border border-zinc-800 bg-zinc-950/70 p-4">
@@ -176,8 +181,7 @@ export default function HomePage() {
                 3 · Let it work
               </p>
               <p className="text-xs text-zinc-400">
-                Turn on auto-reply and let Echo help with conversations,
-                support, and repetitive questions.
+                Enable auto-reply for repetitive messages and support tasks.
               </p>
             </div>
           </div>
@@ -193,19 +197,17 @@ export default function HomePage() {
                 Safety first, then autonomy.
               </h3>
               <p className="mb-3 text-xs text-zinc-400">
-                You define hard boundaries your Echo will never cross: topics to
-                avoid, tones to refuse, and when to escalate back to you.
+                You define the hard boundaries your Echo will never cross:
+                topics to avoid, tones to decline, and when to escalate to you.
               </p>
               <p className="text-xs text-zinc-400">
-                Under the hood, every reply is filtered through your safety
-                rules before being sent. If something feels off, you can always
-                disable auto-reply and switch to manual mode.
+                Every response is filtered through your safety rules before sending.
               </p>
             </div>
 
             <div className="space-y-2 rounded-2xl border border-zinc-800 bg-black/60 p-4 text-xs text-zinc-300">
               <p className="font-semibold text-zinc-100 text-[11px]">
-                Example safety rules your Echo can follow:
+                Example safety rules:
               </p>
               <ul className="space-y-1 text-[11px] text-zinc-400">
                 <li>• No medical, legal, or financial advice.</li>
@@ -221,7 +223,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t border-zinc-800/60 bg-black/90">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-4 text-[11px] text-zinc-500 sm:flex-row">
-          <p>© {new Date().getFullYear()} ECHORA. Built for users everywhere.</p>
+          <p>© {new Date().getFullYear()} ECHORA. Built for users, powered by Echo.</p>
           <div className="flex gap-4">
             <a href="/login" className="hover:text-zinc-300 transition">
               Sign in
