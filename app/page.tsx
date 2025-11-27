@@ -14,12 +14,8 @@ export default function HomePage() {
               <span className="text-xs font-bold tracking-tight">E</span>
             </div>
             <div>
-              <p className="text-sm font-semibold tracking-tight">
-                ECHORA
-              </p>
-              <p className="text-[11px] text-zinc-400">
-                Your personal AI echo
-              </p>
+              <p className="text-sm font-semibold tracking-tight">ECHORA</p>
+              <p className="text-[11px] text-zinc-400">Your personal AI echo</p>
             </div>
           </div>
 
@@ -68,9 +64,9 @@ export default function HomePage() {
           </h1>
 
           <p className="max-w-xl text-sm leading-relaxed text-zinc-300 sm:text-base">
-            ECHORA lets you create an AI “echo” of yourself.  
-            Teach it your tone, boundaries, and stories — then let it handle
-            DMs, support, and conversations while you focus on your real life.
+            ECHORA lets you create an AI “echo” of yourself. Teach it your tone,
+            boundaries, and stories — then let it handle DMs, support, and
+            conversations while you focus on your real life.
           </p>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -81,8 +77,10 @@ export default function HomePage() {
               Start for free
             </Link>
             <p className="text-xs text-zinc-400">
-              No credit card needed to test.  
-              <span className="block sm:inline"> Bring your own OpenAI key when you’re ready.</span>
+              No credit card needed to test.{" "}
+              <span className="block sm:inline">
+                Bring your own OpenAI key when you’re ready.
+              </span>
             </p>
           </div>
 
@@ -119,7 +117,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-md rounded-3xl border border-zinc-800 bg-zinc-950/80 p-4 shadow-xl shadow-purple-900/30">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-xs font-semibold text-zinc-200">
-                Echo Chat · Dawid&apos;s Echo
+                Echo Chat · User&apos;s Echo
               </p>
               <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-300">
                 Auto-reply ON
@@ -134,8 +132,8 @@ export default function HomePage() {
               </div>
               <div className="flex">
                 <div className="max-w-[80%] rounded-2xl rounded-bl-sm bg-zinc-800 px-3 py-2 text-[11px] text-zinc-100">
-                  Got it. I&apos;ll keep it real, respectful, and aligned with
-                  your values. Nothing fake, nothing sugar-coated.
+                  Got it. I’ll keep it real, respectful, and aligned with your
+                  values. Nothing fake, nothing sugar-coated.
                 </div>
               </div>
             </div>
@@ -151,10 +149,7 @@ export default function HomePage() {
       </section>
 
       {/* How it works */}
-      <section
-        id="how-it-works"
-        className="border-t border-zinc-800/60 bg-black/40"
-      >
+      <section id="how-it-works" className="border-t border-zinc-800/60 bg-black/40">
         <div className="mx-auto max-w-6xl px-4 py-12">
           <h2 className="mb-6 text-sm font-semibold uppercase tracking-[0.2em] text-zinc-400">
             How ECHORA works
@@ -198,9 +193,8 @@ export default function HomePage() {
                 Safety first, then autonomy.
               </h3>
               <p className="mb-3 text-xs text-zinc-400">
-                You define hard boundaries your Echo will never cross:
-                topics to avoid, tones to refuse, and when to escalate back to
-                you. ECHORA is designed to be a tool, not a replacement.
+                You define hard boundaries your Echo will never cross: topics to
+                avoid, tones to refuse, and when to escalate back to you.
               </p>
               <p className="text-xs text-zinc-400">
                 Under the hood, every reply is filtered through your safety
@@ -217,7 +211,7 @@ export default function HomePage() {
                 <li>• No medical, legal, or financial advice.</li>
                 <li>• Stay respectful, no insults or humiliation.</li>
                 <li>• If someone is in crisis, encourage real-world help.</li>
-                <li>• Never pretend to be the real Dawid without saying so.</li>
+                <li>• Never pretend to be the real user without saying so.</li>
               </ul>
             </div>
           </div>
@@ -227,12 +221,9 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t border-zinc-800/60 bg-black/90">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-4 text-[11px] text-zinc-500 sm:flex-row">
-          <p>© {new Date().getFullYear()} ECHORA. Built by Dawid & Echo.</p>
+          <p>© {new Date().getFullYear()} ECHORA. Built for users everywhere.</p>
           <div className="flex gap-4">
-            <a
-              href="/login"
-              className="hover:text-zinc-300 transition"
-            >
+            <a href="/login" className="hover:text-zinc-300 transition">
               Sign in
             </a>
             <a
