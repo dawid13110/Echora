@@ -1,4 +1,3 @@
-// app/api/memory/extract/route.ts
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -6,12 +5,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
 
-/**
- * The extractor's job:
- *  - Look at user message
- *  - Only return a memory string if it's a stable personal fact
- *  - If no memory should be saved → return null
- */
 export async function POST(req: Request) {
   try {
     const { message } = await req.json();
@@ -20,7 +13,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ memory: null });
     }
 
-    // Ask OpenAI: does this message contain a long-term personal fact?
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
       temperature: 0,
@@ -29,6 +21,7 @@ export async function POST(req: Request) {
           role: "system",
           content: `
 You extract ONLY long-term facts about the user.
+
 Valid memory examples:
 - Preferences (favorite color, foods, styles)
 - Personality traits the user claims
@@ -42,7 +35,7 @@ INVALID memory examples:
 - Context that won't matter later
 
 Return ONLY the memory text, or "NONE" if nothing should be saved.
-`,
+          `,
         },
         { role: "user", content: message },
       ],

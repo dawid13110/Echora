@@ -112,17 +112,18 @@ export default function ChatPage() {
 
         <div className="flex mt-4 gap-2">
           <input
-            className="flex-1 p-2 rounded bg-zinc-800 border border-zinc-700 text-sm"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-          />
+  className="flex-1 p-2 rounded bg-zinc-800 border border-zinc-700 text-sm"
+  value={input}
+  onChange={(e) => setInput(e.target.value)}
+  placeholder="Type your message..."
+  onKeyDown={(e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  }}
+/>
+
           <button
             onClick={handleSend}
             disabled={loading}
