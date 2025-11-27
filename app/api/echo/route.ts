@@ -1,87 +1,106 @@
+// app/api/echo/route.ts
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { createClient } from "@supabase/supabase-js";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY!,
 });
+
+// Server-side Supabase (service role key)
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const message: string | undefined = body?.message;
-    const memories: string[] = Array.isArray(body?.memories)
-      ? body.memories
-      : [];
+    const message: string = body.message ?? "";
+    const userId: string | undefined = body.userId;
+    const memories: string[] = body.memories ?? [];
 
-    if (!message || typeof message !== "string") {
+    if (!message.trim()) {
       return NextResponse.json(
-        { error: "Message is required." },
+        { error: "Message is required" },
         { status: 400 }
       );
     }
 
-    if (!process.env.OPENAI_API_KEY) {
-      console.error("OPENAI_API_KEY is missing in .env.local");
-      return NextResponse.json(
-        { error: "Server is not configured with an OpenAI API key." },
-        { status: 500 }
-      );
+    // ---------- 1. Load Echo settings for this user ----------
+    let basePrompt =
+      "You are ECHORA, an AI 'echo' of the user. " +
+      "You speak in a calm, direct, honest, and slightly playful tone. " +
+      "You prioritise clarity, emotional safety, and practical, grounded help.";
+
+    let safetyRules =
+      "General safety rules:\n" +
+      "- Do NOT give medical, legal, financial, or other professional advice.\n" +
+      "- Never encourage self-harm, violence, or illegal behaviour.\n" +
+      "- Stay respectful: no insults, humiliation, or harassment.\n" +
+      "- If someone seems in crisis or mentions self-harm, encourage them to seek real-world help and hotlines.\n";
+
+    if (userId) {
+      const { data: settings, error } = await supabase
+        .from("echo_settings")
+        .select("tone_style, base_prompt, safety_rules")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (!error && settings) {
+        if (settings.base_prompt) {
+          basePrompt = settings.base_prompt;
+        }
+        if (settings.safety_rules) {
+          safetyRules = settings.safety_rules;
+        }
+        if (settings.tone_style) {
+          basePrompt += `\n\nTone keywords from the user: ${settings.tone_style}.`;
+        }
+      }
     }
 
-    const memoryContext =
+    // ---------- 2. Turn memories into a block ----------
+    const memoryBlock =
       memories.length > 0
-        ? `Here are some important facts the user previously shared. Use them only if relevant to the current question:\n- ${memories.join(
-            "\n- "
-          )}`
-        : "No prior memory is available for this user yet.";
+        ? `Here are some things you already know about this user. \
+Treat them as facts unless the user corrects you:\n\n${memories
+            .map((m, i) => `${i + 1}. ${m}`)
+            .join(
+              "\n"
+            )}\n\nOnly use these memories when they are actually relevant to the current message.`
+        : "You currently have no stored memories about this user. If they share stable personal facts (preferences, values, goals), you may treat them as future memories.";
 
-    const completion = await client.chat.completions.create({
+    // ---------- 3. Build messages for OpenAI ----------
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
+      {
+        role: "system",
+        content: `${basePrompt}\n\n${safetyRules}\n\n${memoryBlock}`,
+      },
+      {
+        role: "user",
+        content: message,
+      },
+    ];
+
+    // ---------- 4. Call OpenAI ----------
+    const completion = await openai.chat.completions.create({
       model: "gpt-4.1-mini",
-      temperature: 0.7,
-      messages: [
-        {
-          role: "system",
-          content: `
-You are ECHORA, an AI that gives calm, direct, grounded, compassionate and honest guidance.
-You help users gain clarity, see truth more clearly, and make wiser decisions.
-
-You respond in a hybrid style:
-- mostly conversational and human,
-- but when helpful, you add structure (bullets / steps) for clarity.
-
-Respect this context about the user if it's relevant to the current question:
-${memoryContext}
-          `.trim(),
-        },
-        {
-          role: "user",
-          content: message,
-        },
-      ],
+      messages,
+      temperature: 0.6,
+      max_tokens: 600,
     });
 
     const reply =
-      completion.choices?.[0]?.message?.content ??
-      "Sorry, I couldn't generate a reply.";
+      completion.choices[0]?.message?.content?.trim() ??
+      "ECHORA could not generate a response.";
 
     return NextResponse.json({ reply });
   } catch (err: any) {
-    console.error("OpenAI error in /api/echo:", err);
-
-    // Quota / credits error
-    if (err?.status === 429) {
-      return NextResponse.json(
-        {
-          error:
-            "ECHORA hit the OpenAI quota limit. Top up API credits or update your key.",
-        },
-        { status: 429 }
-      );
-    }
-
+    console.error("Echo API error:", err);
     return NextResponse.json(
-      { error: "Unexpected server error talking to ECHORA." },
+      { error: "Something went wrong talking to your Echo." },
       { status: 500 }
     );
   }
