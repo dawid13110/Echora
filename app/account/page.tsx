@@ -20,7 +20,7 @@ export default function AccountPage() {
 
   useEffect(() => {
     const loadProfile = async () => {
-      // Check session
+      // 1) Check session
       const { data: sessionData } = await supabase.auth.getSession();
 
       if (!sessionData.session?.user) {
@@ -30,19 +30,20 @@ export default function AccountPage() {
 
       const user = sessionData.session.user;
 
-      // Load profile row
+      // 2) Load profile row (no generics on .from / .single)
       const { data, error } = await supabase
-        .from<Profile>("profiles")
+        .from("profiles")
         .select("openai_api_key")
         .eq("id", user.id)
         .single();
 
-      if (error && error.code !== "PGRST116") {
-        // PGRST116 = row not found (no profile yet) – that’s okay
+      // If it's a "row not found" error, we just ignore it
+      if (error && (error as any).code !== "PGRST116") {
         console.error("Error loading profile:", error);
         setError("Could not load your account settings.");
-      } else if (data?.openai_api_key) {
-        setApiKey(data.openai_api_key);
+      } else if (data && (data as Profile).openai_api_key) {
+        const profile = data as Profile;
+        setApiKey(profile.openai_api_key ?? "");
       }
 
       setLoading(false);
@@ -66,6 +67,7 @@ export default function AccountPage() {
       return;
     }
 
+    // Upsert profile row – again, no generics on .from
     const { error } = await supabase.from("profiles").upsert(
       {
         id: user.id,
@@ -100,8 +102,9 @@ export default function AccountPage() {
         </h1>
 
         <p className="text-sm text-zinc-400 mb-4">
-          Here you can store your personal <span className="font-mono">OpenAI</span> API key.
-          ECHORA will use this key when generating replies for your Echo.
+          Here you can store your personal{" "}
+          <span className="font-mono">OpenAI</span> API key. ECHORA will use
+          this key when generating replies for your Echo.
         </p>
 
         {error && (
@@ -129,7 +132,8 @@ export default function AccountPage() {
               onChange={(e) => setApiKey(e.target.value)}
             />
             <p className="mt-1 text-[11px] text-zinc-500">
-              Stored securely in your Supabase profile. You can clear this field to remove it.
+              Stored securely in your Supabase profile. You can clear this field
+              to remove it.
             </p>
           </div>
 
