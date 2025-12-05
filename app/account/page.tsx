@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
 type ProfileRow = {
-  id: string;
   openai_api_key: string | null;
 };
 
@@ -21,38 +20,28 @@ export default function AccountPage() {
 
   useEffect(() => {
     const loadProfile = async () => {
-      setError(null);
+      const { data: sessionData } = await supabase.auth.getSession();
 
-      // 1) Check session
-      const { data: sessionData, error: sessionError } =
-        await supabase.auth.getSession();
-
-      if (sessionError) {
-        console.error("Session error:", sessionError);
-        setError("Could not load your account settings.");
-        setLoading(false);
-        return;
-      }
-
-      const user = sessionData.session?.user;
-      if (!user) {
+      if (!sessionData.session?.user) {
         router.push("/login");
         return;
       }
 
-      // 2) Try to load profile row
+      const user = sessionData.session.user;
+
+      // Load profile row
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, openai_api_key")
+        .select("openai_api_key")
         .eq("id", user.id)
-        .maybeSingle<ProfileRow>(); // ✅ no error when row doesn't exist
+        .maybeSingle();
 
-      // If there is a *real* error (not just 'no row'), log it
       if (error && !data) {
         console.error("Error loading profile:", error);
         setError("Could not load your account settings.");
       } else if (data?.openai_api_key) {
-        setApiKey(data.openai_api_key);
+        const profile = data as ProfileRow;
+        setApiKey(profile.openai_api_key || "");
       }
 
       setLoading(false);
@@ -76,16 +65,18 @@ export default function AccountPage() {
       return;
     }
 
-    const { error } = await supabase.from("profiles").upsert(
-      {
-        id: user.id,
-        openai_api_key: apiKey || null,
-      },
-      { onConflict: "id" }
-    );
+    const { error: saveError } = await supabase
+      .from("profiles")
+      .upsert(
+        {
+          id: user.id,
+          openai_api_key: apiKey || null,
+        },
+        { onConflict: "id" }
+      );
 
-    if (error) {
-      console.error("Error saving profile:", error);
+    if (saveError) {
+      console.error("Error saving profile:", saveError);
       setError("Could not save your API key. Try again in a moment.");
     } else {
       setMessage("API key saved successfully.");
@@ -135,7 +126,7 @@ export default function AccountPage() {
             <input
               type="password"
               className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="sk-…"
+              placeholder="sk-..."
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
             />

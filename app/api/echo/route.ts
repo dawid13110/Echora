@@ -51,22 +51,25 @@ ${memoryText}
       ],
     });
 
-    // Safely read the text from the Responses API
-    const firstOutput = completion.output[0];
-    const firstPart = firstOutput.content[0];
+// Safely read the text from the Responses API
+const firstOutput = completion.output[0];
 
-    const reply =
-      (firstPart.type === "output_text" && firstPart.text) ||
-      "ECHORA couldn’t generate a response this time.";
+let reply = "ECHORA couldn’t generate a response this time.";
 
-    return NextResponse.json({ reply });
+// Narrow the union: only "message" items have `content`
+if (firstOutput && firstOutput.type === "message") {
+  const firstPart = firstOutput.content[0];
+
+  if (firstPart && firstPart.type === "output_text" && firstPart.text) {
+    reply = firstPart.text;
+  }
+}
+
+return NextResponse.json({ reply });
   } catch (error: any) {
     console.error("Echo API error:", error);
     return NextResponse.json(
-      {
-        error: "Something went wrong talking to your Echo.",
-        details: error?.message ?? "Unknown error",
-      },
+      { error: "ECHORA had a problem generating a reply." },
       { status: 500 }
     );
   }
