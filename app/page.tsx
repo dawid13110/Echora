@@ -220,25 +220,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-zinc-800/60 bg-black/90">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-4 text-[11px] text-zinc-500 sm:flex-row">
-          <p>© {new Date().getFullYear()} ECHORA. Built for users, powered by Echo.</p>
-          <div className="flex gap-4">
-            <a href="/login" className="hover:text-zinc-300 transition">
-              Sign in
-            </a>
-            <a
-              href="https://github.com/dawid13110/Echora"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-zinc-300 transition"
-            >
-              View code
-            </a>
-          </div>
-        </div>
-      </footer>
+{/* Footer */}
+<footer className="border-t border-zinc-800/60 bg-black/90">
+  <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-4 text-[11px] text-zinc-500 sm:flex-row">
+    <p>© {new Date().getFullYear()} ECHORA. Built for users, powered by Echo.</p>
+    <div className="flex gap-4">
+      <a href="/login" className="hover:text-zinc-300 transition">
+        Sign in
+      </a>
+      {/* GitHub link removed */}
+    </div>
+  </div>
+</footer>
     </main>
   );
 }
